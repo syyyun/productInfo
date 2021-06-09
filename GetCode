@@ -1,0 +1,73 @@
+
+        public void GetCode()
+        {
+            //仮にここでDTを作成します。
+            DataTable dt = null;
+            CreateDataTable(out dt);
+
+            //商品種別コード（本当は10種くらいある）
+            var okasiCd = new List<cdInfo>();   //お菓子コード
+            var souzaiCd = new List<cdInfo>();     //惣菜コード
+            var nikuCd = new List<cdInfo>();     //お肉コード
+
+            //商品情報コード
+            var zairyoCd = new List<string>();     //原材料コード
+            var kameiCd = new List<string>();      //仕入れ先拠点コード
+            var byotoCd = new List<string>();      //発注コード
+
+
+            //データテーブルに格納されたデータを取り出します。
+            foreach (DataRow dr in dt.Rows)
+            {
+                var data = (Dictionary<string, string>)dr["データ"];
+
+                //本当はここをメソッド化したい
+                //商品種別コードが多いが、上記で定義した全てを渡したい
+                //-------------------------------------------
+                //商品種別コードに紐づく商品情報コードをDBから取得
+                //GetChangeCodeメソッドからは、DBから取得したコードがListに格納されて帰ってくる。
+                okasiCd = GetChangeCode(data, zairyoCd, kameiCd, byotoCd);
+                souzaiCd = GetChangeCode(data, zairyoCd, kameiCd, byotoCd);
+                nikuCd = GetChangeCode(data, zairyoCd, kameiCd, byotoCd);
+                //-------------------------------------------
+
+                //ここからは商品種別コードと商品情報コードが必要なものだけピックアップして
+                //それぞれエラーチェックしたりする。
+
+                //このように、コードを紐づけたり、チェックしたり、変換したりいくつか処理を繰り返すため
+                //メソッド化していきたい。
+                
+            }
+        }
+        
+        
+        public class cdInfo
+        {
+            public string MaeCd { get; private set; } 
+            public string UsiroCd { get; private set; } 
+
+            //本当はもっとある10種くらい
+            public string Info1 { get; private set; }    
+            public string Info2 { get; private set; }        
+            public List<string> Info3 = new List<string>();
+
+
+            //親子コードにマージして返します。
+            public string FullCode
+            {
+                get
+                {
+                    return this.MaeCd + this.UsiroCd;
+                }
+            }
+
+            public cdInfo(string _mae, string _usiro, List<string> _info3 = null, string _info1 = "", string _info2 = "")
+            {
+                this.MaeCd = _mae;
+                this.UsiroCd = _usiro;
+
+                this.Info1 = _info1;       
+                this.Info2 = _info2;       
+                this.Info3 = _info3;
+            }
+        }
