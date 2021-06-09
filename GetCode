@@ -70,4 +70,23 @@
                 this.Info2 = _info2;       
                 this.Info3 = _info3;
             }
+            
+            public List<string> InfoList = {get;private set;}
+            //可変長引数
+            public cdInfo(string _mae, string _usiro, params string[] items )
+            {
+                this.MaeCd = _mae;
+                this.UsiroCd = _usiro;
+
+                //List型のプロパティに代入しておいてなんかいい感じに使えるようにしておく
+                InfoList = new List<string>();
+                InfoList.AddRange(items);
+            }
+        }
+
+        public class sample {
+            //可変長引数は好きなだけ代入できるよ
+            var myCdInfo1 = new cdInfo("mae","ushio","item1");
+            var myCdInfo2 = new cdInfo("mae","ushio","item1","item2");
+            var myCdInfo3 = new cdInfo("mae","ushio","item1","item2","item3");
         }
