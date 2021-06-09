@@ -17,19 +17,21 @@
                 var data = (Dictionary<string, string>)dr["データ"];
 
 
+                string errCd = "";
+
                 //商品コードチェック
-                if (codeCheck(data["商品コード"]) != "OK")
+                if (codeCheck(data["商品コード"], out errCd))
                 {
-                    errNo = codeCheck(data["商品コード"]);
+                    errNo = errCd;
                     errFlg = "E";
 
                     continue;
                 }
 
                 //商品価格チェック
-                if (priceCheck(int.Parse(data["商品価格"])) != "OK")
+                if (priceCheck(int.Parse(data["商品価格"]), out errCd))
                 {
-                    errNo = codeCheck(data["商品価格"]);
+                    errNo = errCd;
                     errFlg = "E";
 
                     continue;
@@ -56,27 +58,36 @@
         /// <summary>
         /// 商品コード値チェック
         /// </summary>
-        public string codeCheck(string _code)
+        public bool codeCheck(string _code, out string _errCd)
         {
+            _errCd = "";
+
             //商品コードが1以上の値でなければエラーコード「1」を返す
             if (0 < int.Parse(_code))
             {
-                return "1";
+                _errCd = "1";
+
+                return true;
             }
 
-            return "OK";
+            return false;
         }
 
         /// <summary>
         /// 商品価格範囲チェック
         /// </summary>
-        public string priceCheck(int _price)
+        public bool priceCheck(int _price, out string _errCd)
         {
+            _errCd = "";
+
             //商品価格が100～2000円の範囲でなければエラーコード「2」を返す
             if (100 <= _price && _price <= 2000)
             {
-                return "2";
+                _errCd = "2";
+
+                return true;
             }
 
-            return "OK";
+            return false;
         }
+
