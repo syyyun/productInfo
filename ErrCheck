@@ -1,0 +1,82 @@
+
+        public void ErrCheck() 
+        {
+            DataTable dt = null;
+            CreateDataTable(dt);
+
+            //データテーブルに格納されたデータを取り出します。
+            foreach (DataRow dr in dt.Rows)
+            {
+                var errNo = dr["エラー番号"].ToString();
+
+                //エラーの場合はフラグ「E」を格納
+                var errFlg = dr["エラーフラグ"].ToString();
+
+                //DictionaryのKEYには商品情報名称が格納されている（商品コード、商品価格、商品販売店）
+                //Valueは名称に紐づく値が格納されている（コード番号、価格、販売店名）
+                var data = (Dictionary<string, string>)dr["データ"];
+
+
+                //商品コードチェック
+                if (codeCheck(data["商品コード"]) != "OK")
+                {
+                    errNo = codeCheck(data["商品コード"]);
+                    errFlg = "E";
+
+                    continue;
+                }
+
+                //商品価格チェック
+                if (priceCheck(int.Parse(data["商品価格"])) != "OK")
+                {
+                    errNo = codeCheck(data["商品価格"]);
+                    errFlg = "E";
+
+                    continue;
+                }
+            }
+        }
+
+        /// <summary>
+        /// データテーブルを作成します。
+        /// </summary>
+        /// <param name="_dt"></param>
+        public static void CreateDataTable(DataTable _dt)
+        {
+            var dc1 = new DataColumn("データ", typeof(Dictionary<string, string>));
+            var dc2 = new DataColumn("エラーフラグ", typeof(string));
+            var dc3 = new DataColumn("エラー番号", typeof(string));
+
+            _dt.Columns.Add(dc1);
+            _dt.Columns.Add(dc2);
+            _dt.Columns.Add(dc3);
+        }
+
+
+        /// <summary>
+        /// 商品コード値チェック
+        /// </summary>
+        public string codeCheck(string _code)
+        {
+            //商品コードが1以上の値でなければエラーコード「1」を返す
+            if (0 < int.Parse(_code))
+            {
+                return "1";
+            }
+
+            return "OK";
+        }
+
+        /// <summary>
+        /// 商品価格範囲チェック
+        /// </summary>
+        public string priceCheck(int _price)
+        {
+            //商品価格が100～2000円の範囲でなければエラーコード「2」を返す
+            if (100 <= _price && _price <= 2000)
+            {
+                return "2";
+            }
+
+            return "OK";
+        }
