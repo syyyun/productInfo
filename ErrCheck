@@ -22,7 +22,8 @@
                 //商品コードチェック
                 if (codeCheck(data["商品コード"], out errNo))
                 {
-                    errFlg = "E";
+                    dr["エラー番号"] = errNo;
+                    dr["エラーフラグ"] = "E";
 
                     continue;
                 }
@@ -30,8 +31,9 @@
                 //商品価格チェック
                 if (priceCheck(int.Parse(data["商品価格"]), out errNo))
                 {
-                    errFlg = "E";
-
+                    dr["エラー番号"] = errNo;
+                    dr["エラーフラグ"] = "E";
+                    
                     continue;
                 }
             }
