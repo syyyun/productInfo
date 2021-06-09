@@ -20,18 +20,16 @@
                 string errCd = "";
 
                 //商品コードチェック
-                if (codeCheck(data["商品コード"], out errCd))
+                if (codeCheck(data["商品コード"], out errNo))
                 {
-                    errNo = errCd;
                     errFlg = "E";
 
                     continue;
                 }
 
                 //商品価格チェック
-                if (priceCheck(int.Parse(data["商品価格"]), out errCd))
+                if (priceCheck(int.Parse(data["商品価格"]), out errNo))
                 {
-                    errNo = errCd;
                     errFlg = "E";
 
                     continue;
