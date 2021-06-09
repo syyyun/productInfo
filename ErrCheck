@@ -31,10 +31,10 @@
                 //商品価格チェック
                 if (priceCheck(int.Parse(data["商品価格"]), out errNo))
                 {
-                    dr["エラー番号"] = errNo;
-                    dr["エラーフラグ"] = "E";
-                    
-                    continue;
+                    errNo = codeCheck(data["商品価格"]);
+                    errFlg = "E";
+
+                    continue;//ここは次のループで上書きされてしまうような気がします。
                 }
             }
         }
