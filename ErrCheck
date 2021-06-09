@@ -2,7 +2,7 @@
         public void ErrCheck() 
         {
             DataTable dt = null;
-            CreateDataTable(dt);
+            CreateDataTable(out dt);
 
             //データテーブルに格納されたデータを取り出します。
             foreach (DataRow dr in dt.Rows)
@@ -23,7 +23,7 @@
                     errNo = codeCheck(data["商品コード"]);
                     errFlg = "E";
 
-                    continue;
+                    continue;//ここは次のループで上書きされてしまうような気がします。
                 }
 
                 //商品価格チェック
@@ -32,7 +32,7 @@
                     errNo = codeCheck(data["商品価格"]);
                     errFlg = "E";
 
-                    continue;
+                    continue;//ここは次のループで上書きされてしまうような気がします。
                 }
             }
         }
@@ -41,8 +41,9 @@
         /// データテーブルを作成します。
         /// </summary>
         /// <param name="_dt"></param>
-        public static void CreateDataTable(DataTable _dt)
+        public static void CreateDataTable(out DataTable _dt)
         {
+            var _dt = new DataTable();
             var dc1 = new DataColumn("データ", typeof(Dictionary<string, string>));
             var dc2 = new DataColumn("エラーフラグ", typeof(string));
             var dc3 = new DataColumn("エラー番号", typeof(string));
@@ -59,7 +60,7 @@
         public string codeCheck(string _code)
         {
             //商品コードが1以上の値でなければエラーコード「1」を返す
-            if (0 < int.Parse(_code))
+            if (0 <= int.Parse(_code))
             {
                 return "1";
             }
@@ -73,10 +74,11 @@
         public string priceCheck(int _price)
         {
             //商品価格が100～2000円の範囲でなければエラーコード「2」を返す
-            if (100 <= _price && _price <= 2000)
-            {
-                return "2";
-            }
+            return _price.IsWithin(100, 2000) ? "OK" : "2";
+        }
 
-            return "OK";
+        //拡張メソッド
+        public static bool IsWithin(this int value, int minimum, int maximum)
+        {
+            return value >= minimum && value <= maximum;
         }
